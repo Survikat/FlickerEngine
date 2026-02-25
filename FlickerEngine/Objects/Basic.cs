@@ -9,6 +9,8 @@ public class Basic {
     public bool active = true;
     public bool visible = true;
 
+    public int ID;
+
     /// <summary>
     /// Draws to the frame upon every draw.
     /// Automatically skips drawing if invisible.

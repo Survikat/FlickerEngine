@@ -1,4 +1,5 @@
 ﻿using FlickerEngine.Managers;
+using FlickerEngine.Objects.Render;
 using Raylib_cs;
 
 namespace FlickerEngine;
@@ -9,7 +10,15 @@ public class Game {
         ConfigFlags.AlwaysRunWindow,
         ConfigFlags.Msaa4xHint
     ];
-    
+
+    public static int FrameWidth = 640;
+    public static int FrameHeight = 480;
+
+    public static int RenderWidth => Raylib.GetScreenWidth();
+    public static int RenderHeight => Raylib.GetScreenHeight();
+
+    private static List<Scene> Scenes = new ();
+
     /// <summary>
     /// Currently set ContextFlags (also known as ConfigFlags).
     /// </summary>
@@ -34,15 +43,51 @@ public class Game {
     }
     
     public static void Initialize(string Title, int Width, int Height, int FPS) {
+        FrameWidth = Width;
+        FrameHeight = Height;
+        
         Window.Initialize(Width, Height, Title, ContextFlags);
         Raylib.SetTargetFPS(FPS);
-        
-        while (!Window.ShouldClose) { Update(); }
+    }
+
+    /// <summary>
+    /// Starts the Game Loop.
+    /// </summary>
+    /// <returns>Exit Code</returns>
+    public static int Execute() {
+        try {
+            while (!Window.ShouldClose) {
+                Update();
+            }
+        }
+        catch (Exception e) {
+            Console.WriteLine($"[FAILED] {e.Message}");
+            return 1;
+        }
+
+        return 0;
     }
 
     private static void Update() {
         Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.Blank);
+
+            int currentCount = Scenes.Count;
+            for (int i = 0; i < currentCount; i++) {
+                Scene Scene = Scenes[i];
+                
+                Scene.Update(Raylib.GetFrameTime());
+                Scene.Draw();
+            }
         Raylib.EndDrawing();
+    }
+
+    public static void AddScene(Scene Scene) {
+        Scenes.Add(Scene);
+        Scene.Create();
+    }
+
+    public static void RemoveScene(Scene Scene) {
+        Scenes.Remove(Scene);
     }
 }

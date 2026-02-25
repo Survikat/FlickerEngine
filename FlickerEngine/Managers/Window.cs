@@ -78,6 +78,15 @@ public class Window {
             return Raylib.WindowShouldClose();
         }
     }
+
+    public static bool WasResized {
+        get {
+            if (!Raylib.IsWindowReady())
+                return false;
+
+            return Raylib.IsWindowResized();
+        }
+    }
     
     /// <summary>
     /// Initializes the Window for the current application.
