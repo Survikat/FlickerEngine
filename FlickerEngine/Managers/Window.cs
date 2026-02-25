@@ -1,6 +1,6 @@
 ﻿using Raylib_cs;
 
-namespace FlickerEngine.Program;
+namespace FlickerEngine.Managers;
 
 public class Window {
     public static int X {
