@@ -21,8 +21,8 @@ public class MainScene : Scene {
     public override void Draw() {
         base.Draw();
         
-        float FPS = 1 / Raylib.GetFrameTime();
-        Raylib.DrawText($"FPS: {FPS:F2}", 8, 8, 24, Color.Green);
+        Raylib.DrawText("You can't see me...\nUnless you resize\nthe Window.", 8, 
+            Game.RenderHeight - (24 * 3), 24, Color.White);
     }
 
     private float Speed = 30;
@@ -33,12 +33,11 @@ public class MainScene : Scene {
         if (Raylib.IsKeyPressed(KeyboardKey.Enter)) {
             Camera.DynamicSize = !Camera.DynamicSize;
         }
-
+        
         if (Raylib.IsKeyPressed(KeyboardKey.Escape)) {
-            Console.WriteLine("Closing and Reopening Scene");
+            Console.WriteLine("FLICKER: Closing all and Reopening Scene");
             
-            Game.AddScene(new MainScene());
-            Game.RemoveScene(this);
+            Game.SwitchScene(new MainScene());
         }
         
         bool TargetScrolling = true;

@@ -11,11 +11,6 @@ public class Group : Basic {
     public void Add(Basic Member) => Members.Add(Member);
     public void Remove(Basic Member) => Members.Remove(Member);
     public void Clear() => Members.Clear();
-    
-    /// <summary>
-    /// Kills and Removes all Members from the group.
-    /// </summary>
-    public void Dispose() { Kill(); Clear(); }
 
     public void ForEach(Action<Basic> Action) {
         List<Basic> CurrentMembers = Members.ToList();
@@ -47,5 +42,13 @@ public class Group : Basic {
         
         for (int i = 0; i < Count; i++)
             Members[i].Kill();
+    }
+    
+    public override void Dispose() {
+        base.Dispose();
+        
+        Kill();
+        ForEach(Member => Member.Dispose());
+        Clear();
     }
 }

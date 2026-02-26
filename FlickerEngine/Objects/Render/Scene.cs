@@ -1,6 +1,6 @@
 ﻿namespace FlickerEngine.Objects.Render;
 
-public class Scene {
+public class Scene : IDisposable {
     public List<Camera> Cameras = new ();
     private List<Basic> Objects = new ();
 
@@ -58,5 +58,15 @@ public class Scene {
     public void Add(Basic Object) {
         Object.Camera ??= this.Camera;
         Objects.Add(Object);
+    }
+
+    public void Dispose() {
+        Cameras.Clear();
+        
+        Objects.ForEach(Obj => Obj.Dispose());
+        Objects.Clear();
+        
+        // Apparently a bad practice.
+        // GC.Collect(1);
     }
 }

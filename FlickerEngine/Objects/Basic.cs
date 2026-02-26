@@ -2,7 +2,7 @@
 
 namespace FlickerEngine.Objects;
 
-public class Basic {
+public class Basic : IDisposable {
     /// <summary>
     /// Behaves as both <c>active</c> and <c>visible</c>.
     /// If false, and the Object is part of a Scene, it will be removed next frame.
@@ -56,5 +56,9 @@ public class Basic {
     /// </summary>
     public virtual void Kill() {
         Alive = false;
+    }
+
+    public virtual void Dispose() {
+        Cameras.Clear();
     }
 }

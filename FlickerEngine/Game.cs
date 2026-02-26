@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using FlickerEngine.Managers;
+﻿using FlickerEngine.Managers;
 using FlickerEngine.Objects.Render;
+using FlickerEngine.Objects.Render.Debugger;
 using Raylib_cs;
 
 namespace FlickerEngine;
@@ -65,23 +65,37 @@ public class Game {
         }
         catch (Exception e) {
             Console.WriteLine($"[FAILED] {e.Message}");
+            
+            Window.Close();
             return 1;
         }
 
+        Window.Close();
         return 0;
     }
-
+    
     private static void Update() {
         Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.Blank);
 
-            int currentCount = Scenes.Count;
-            for (int i = 0; i < currentCount; i++) {
-                Scene Scene = Scenes[i];
-                
+            List<Scene> ScenesToUpdate = Scenes.ToList();
+            ScenesToUpdate.ForEach(Scene => {
                 Scene.Update(Raylib.GetFrameTime());
-                Scene.Draw();
+                
+                if (!Scene.Equals(null))
+                    Scene.Draw();
+            });
+
+            // Handled this way to prevent flickering.
+            if (ScenesToRemove.Count > 0) {
+                var OldScenes = ScenesToRemove.ToList();
+                OldScenes.ForEach(Old => { Scenes.Remove(Old); Old.Dispose(); });
+            
+                ScenesToRemove.Clear();
+                Scenes.Sort();
             }
+            
+            DebuggerOverlay.Draw(Raylib.GetFrameTime());
         Raylib.EndDrawing();
     }
 
@@ -90,8 +104,19 @@ public class Game {
         Scenes.Add(Scene);
     }
 
+    private static List<Scene> ScenesToRemove = new ();
     public static void RemoveScene(Scene Scene) {
-        Scenes.Remove(Scene);
-        GC.Collect();
+        ScenesToRemove.Add(Scene);
+    }
+
+    /// <summary>
+    /// Opens the given scene before closing all others.
+    /// </summary>
+    /// <param name="Scene">Any New Scene</param>
+    public static void SwitchScene(Scene Scene) {
+        List<Scene> OldScenes = Scenes.ToList();
+        
+        AddScene(Scene);
+        ScenesToRemove = OldScenes;
     }
 }

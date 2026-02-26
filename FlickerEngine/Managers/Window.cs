@@ -107,6 +107,8 @@ public class Window {
         Raylib.InitWindow(Width, Height, Title);
     }
 
+    public static void Close() => Raylib.CloseWindow();
+    
     public static void SetSize(int Width, int Height) {
         Window.Width = Width;
         Window.Height = Height;

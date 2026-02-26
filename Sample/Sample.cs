@@ -11,7 +11,7 @@ internal class MyGame {
         Game.RemoveConfigFlag(ConfigFlags.UndecoratedWindow);
         
         // You can set FPS to 0 for Unlimited FPS.
-        Game.Initialize("Sample Project", 640, 480, 0);
+        Game.Initialize("Sample Project", 640, 480, 120);
         Game.AddScene(new MainScene());
         
         // Same can be done after Initialization.
