@@ -1,22 +1,43 @@
-﻿namespace FlickerEngine.Objects;
+﻿using FlickerEngine.Objects.Render;
+
+namespace FlickerEngine.Objects;
 
 public class Basic {
     /// <summary>
     /// Behaves as both <c>active</c> and <c>visible</c>.
+    /// If false, and the Object is part of a Scene, it will be removed next frame.
     /// </summary>
-    public bool exists = true;
+    public bool Alive = true;
     
-    public bool active = true;
-    public bool visible = true;
-
-    public int ID;
+    public bool Active = true;
+    public bool Visible = true;
+    
+    public List<Camera> Cameras = [];
+    public Camera? Camera {
+        get {
+            if (Cameras.Count == 0)
+                return null;
+            
+            return Cameras[0];
+        }
+        set {
+            if (value is not null) {
+                if (Cameras.Count == 0) {
+                    Cameras.Add(value);
+                }
+                else {
+                    Cameras[0] = value;
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// Draws to the frame upon every draw.
     /// Automatically skips drawing if invisible.
     /// </summary>
     public virtual void Draw() {
-        if (!visible || !exists)
+        if (!Visible || !Alive)
             return;
     }
 
@@ -25,8 +46,8 @@ public class Basic {
     /// Automatically skips updating if inactive.
     /// </summary>
     /// <param name="Delta">Delta Time</param>
-    public virtual void Update(double Delta) {
-        if (!active || !exists)
+    public virtual void Update(float Delta) {
+        if (!Active || !Alive)
             return;
     }
 
@@ -34,6 +55,6 @@ public class Basic {
     /// Sets <c>exists</c> to <c>false</c>.
     /// </summary>
     public virtual void Kill() {
-        exists = false;
+        Alive = false;
     }
 }

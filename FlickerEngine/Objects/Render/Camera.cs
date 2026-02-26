@@ -6,12 +6,18 @@ namespace FlickerEngine.Objects.Render;
 
 public class Camera {
     private Camera2D Lens;
-    private Group Objects = new Group();
-    
+
     public Color BGColor = Color.Blank;
+    public bool Visible = true;
     
     public int Width;
     public int Height;
+
+    public float X = 0.0f;
+    public float Y = 0.0f;
+
+    public float ScrollX = 0.0f;
+    public float ScrollY = 0.0f;
 
     private bool _dynamicSize;
     
@@ -52,22 +58,20 @@ public class Camera {
     }
 
     private void UpdateLensOffsets() {
-        Lens.Offset.X = (float)(Game.RenderWidth / 2.0);
-        Lens.Offset.Y = (float)(Game.RenderHeight / 2.0);
+        Lens.Offset.X = (float)(Game.RenderWidth / 2.0) + X;
+        Lens.Offset.Y = (float)(Game.RenderHeight / 2.0) + Y;
 
-        Lens.Target.X = (float)(Width / 2.0);
-        Lens.Target.Y = (float)(Height / 2.0);
+        Lens.Target.X = (float)(Width / 2.0) + ScrollX;
+        Lens.Target.Y = (float)(Height / 2.0) + ScrollY;
     }
 
-    public void Draw() {
-        if (Window.WasResized) {
-            if (DynamicSize) {
-                Width = Game.RenderWidth;
-                Height = Game.RenderHeight;
-            }
-            
-            UpdateLensOffsets();
+    public void Draw(Basic[] Objects) {
+        if (DynamicSize && Window.WasResized) {
+            Width = Game.RenderWidth;
+            Height = Game.RenderHeight;
         }
+        
+        UpdateLensOffsets();
         
         float Scale = Math.Min(
             (float)Game.RenderWidth / Width,
@@ -80,36 +84,17 @@ public class Camera {
         int TotalHeight = (int)(Height * Scale);
         
         Raylib.BeginScissorMode(
-            (Game.RenderWidth - TotalWidth) / 2, 
-            (Game.RenderHeight - TotalHeight) / 2, 
+            ((Game.RenderWidth - TotalWidth) / 2) + (int)X,
+            ((Game.RenderHeight - TotalHeight) / 2) + (int)Y, 
             TotalWidth,
             TotalHeight
         );
             Raylib.BeginMode2D(Lens);
                 Raylib.ClearBackground(BGColor);
-                Objects.Draw();
                 
-                // PLACEHOLDER
-                Raylib.DrawText("Hello World!", 0, 0, 32, Color.Blue);
+                foreach (Basic Object in Objects)
+                    Object.Draw();
             Raylib.EndMode2D();
         Raylib.EndScissorMode();
-    }
-
-    public void Update(double Delta) {
-        Objects.Update(Delta);
-    }
-
-    public void Add(Basic Object) {
-        if (Objects.Contains(Object))
-            return;
-        
-        Objects.Add(Object);
-    }
-
-    public void Remove(Basic Object) {
-        if (!Objects.Contains(Object))
-            return;
-        
-        Objects.Remove(Object);
     }
 }

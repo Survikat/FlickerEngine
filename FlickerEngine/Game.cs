@@ -1,4 +1,5 @@
-﻿using FlickerEngine.Managers;
+﻿using System.Diagnostics;
+using FlickerEngine.Managers;
 using FlickerEngine.Objects.Render;
 using Raylib_cs;
 
@@ -47,7 +48,9 @@ public class Game {
         FrameHeight = Height;
         
         Window.Initialize(Width, Height, Title, ContextFlags);
+        
         Raylib.SetTargetFPS(FPS);
+        Raylib.SetExitKey(KeyboardKey.Null);
     }
 
     /// <summary>
@@ -83,11 +86,12 @@ public class Game {
     }
 
     public static void AddScene(Scene Scene) {
-        Scenes.Add(Scene);
         Scene.Create();
+        Scenes.Add(Scene);
     }
 
     public static void RemoveScene(Scene Scene) {
         Scenes.Remove(Scene);
+        GC.Collect();
     }
 }

@@ -23,7 +23,7 @@ public class Group : Basic {
     }
     
     public void ForEachExists(Action<Basic> Action) {
-        List<Basic> ExistingMembers = Members.Where(Member => Member.exists).ToList();
+        List<Basic> ExistingMembers = Members.Where(Member => Member.Alive).ToList();
         ExistingMembers.ForEach(Action);
     }
     
@@ -33,7 +33,7 @@ public class Group : Basic {
         ForEachExists(basic => basic.Draw());
     }
 
-    public override void Update(double Delta) {
+    public override void Update(float Delta) {
         base.Update(Delta);
         
         ForEachExists(basic => basic.Update(Delta));
