@@ -30,11 +30,12 @@ public class Scene : IDisposable {
     public virtual void Draw() {
         Cameras.ForEach(Cam => {
             if (Cam.Visible) {
-                Basic[] RenderedObjects = Objects.FindAll(Obj => {
+                Basic[] ?RenderedObjects = Objects.FindAll(Obj => {
                     return (Obj.Alive && Obj.Cameras.Contains(Cam) && Obj.Visible);
                 }).ToArray();
                 
                 Camera.Draw(RenderedObjects);
+                RenderedObjects = null;
             }
         });
     }
@@ -42,13 +43,16 @@ public class Scene : IDisposable {
     public virtual void Create() { }
 
     public virtual void Update(float Delta) {
-        Basic[] CurrentObjects = Objects.ToArray();
-        foreach (Basic Object in CurrentObjects) {
-            if (Object.Alive)
-                continue;
-            
-            Objects.Remove(Object);
-        }
+        List<Basic> CurrentObjects = Objects.ToList();
+        CurrentObjects.ForEach(Obj => {
+            Obj.Update(Delta);
+
+            if (!Obj.Alive) {
+                Objects.Remove(Obj);
+            }
+        });
+        
+        CurrentObjects.Clear();
     }
 
     /// <summary>

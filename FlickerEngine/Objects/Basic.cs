@@ -36,7 +36,7 @@ public class Basic : IDisposable {
     /// Draws to the frame upon every draw.
     /// Automatically skips drawing if invisible.
     /// </summary>
-    public virtual void Draw() {
+    public virtual void Draw(Camera Camera) {
         if (!Visible || !Alive)
             return;
     }

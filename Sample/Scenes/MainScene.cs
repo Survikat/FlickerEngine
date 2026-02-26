@@ -1,11 +1,16 @@
-﻿using FlickerEngine;
+﻿using System.Reflection;
+using FlickerEngine;
+using FlickerEngine.Managers.Sprites;
 using FlickerEngine.Objects.Generic;
 using FlickerEngine.Objects.Render;
+using FlickerEngine.Objects.Sprites;
 using Raylib_cs;
 
 namespace Sample.Scenes;
 
 public class MainScene : Scene {
+    private Sprite Jellyfish = null!;
+    
     public override void Create() {
         Camera.BGColor = Color.White;
         
@@ -14,6 +19,14 @@ public class MainScene : Scene {
         var HelloWorld = new RaylibText("Hello World", 128, 128, Color.Blue);
         HelloWorld.FontSize = 32;
         Add(HelloWorld);
+
+        Jellyfish = new Sprite(256, 256, "Assets/Jellyfish.png", true, 16, 16);
+        Jellyfish.Scale = 12;
+        
+        Jellyfish.Animator.Add(new AnimationData("Idle", [0, 1, 2], 6));
+        Jellyfish.Animator.Play("Idle");
+        
+        Add(Jellyfish);
     }
 
     // Not Recommended Behavior, but possible.

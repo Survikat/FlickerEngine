@@ -1,4 +1,6 @@
-﻿using FlickerEngine.Managers;
+﻿using System.Reflection;
+using FlickerEngine.Managers;
+using FlickerEngine.Managers.Assets;
 using FlickerEngine.Objects.Render;
 using FlickerEngine.Objects.Render.Debugger;
 using Raylib_cs;
@@ -47,6 +49,7 @@ public class Game {
         FrameWidth = Width;
         FrameHeight = Height;
         
+        Resources.Initialize(Assembly.GetCallingAssembly());
         Window.Initialize(Width, Height, Title, ContextFlags);
         
         Raylib.SetTargetFPS(FPS);
@@ -64,7 +67,7 @@ public class Game {
             }
         }
         catch (Exception e) {
-            Console.WriteLine($"[FAILED] {e.Message}");
+            Console.WriteLine($"[FAILED] {e}");
             
             Window.Close();
             return 1;
@@ -85,6 +88,8 @@ public class Game {
                 if (!Scene.Equals(null))
                     Scene.Draw();
             });
+            
+            ScenesToUpdate.Clear();
 
             // Handled this way to prevent flickering.
             if (ScenesToRemove.Count > 0) {

@@ -1,4 +1,6 @@
-﻿namespace FlickerEngine.Objects;
+﻿using FlickerEngine.Objects.Render;
+
+namespace FlickerEngine.Objects;
 
 public class Group : Basic {
     private List<Basic> Members = new();
@@ -15,17 +17,24 @@ public class Group : Basic {
     public void ForEach(Action<Basic> Action) {
         List<Basic> CurrentMembers = Members.ToList();
         CurrentMembers.ForEach(Action);
+        
+        CurrentMembers.Clear();
     }
     
     public void ForEachExists(Action<Basic> Action) {
         List<Basic> ExistingMembers = Members.Where(Member => Member.Alive).ToList();
         ExistingMembers.ForEach(Action);
+        
+        ExistingMembers.Clear();
     }
     
-    public override void Draw() {
-        base.Draw();
+    public override void Draw(Camera Camera) {
+        base.Draw(Camera);
         
-        ForEachExists(basic => basic.Draw());
+        ForEachExists(basic => {
+            basic.Cameras = Cameras.ToList();
+            basic.Draw(Camera);
+        });
     }
 
     public override void Update(float Delta) {

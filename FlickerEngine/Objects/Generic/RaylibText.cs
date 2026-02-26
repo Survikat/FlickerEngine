@@ -1,4 +1,5 @@
-﻿using Raylib_cs;
+﻿using FlickerEngine.Objects.Render;
+using Raylib_cs;
 
 namespace FlickerEngine.Objects.Generic;
 
@@ -20,8 +21,8 @@ public class RaylibText : Basic {
         this.Color = Color;
     }
 
-    public override void Draw() {
-        base.Draw();
+    public override void Draw(Camera Camera) {
+        base.Draw(Camera);
         
         Raylib.DrawText(Text, (int)X, (int)Y, FontSize, Color);
     }

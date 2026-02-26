@@ -12,4 +12,10 @@
         <ProjectReference Include="..\FlickerEngine\FlickerEngine.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Assets\**\*.*" />
+      <EmbeddedResource Include="Assets\**\*.*">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
 </Project>
