@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using FlickerEngine;
-using FlickerEngine.Managers.Sprites;
+﻿using FlickerEngine;
 using FlickerEngine.Objects.Generic;
 using FlickerEngine.Objects.Render;
 using FlickerEngine.Objects.Sprites;
@@ -22,9 +20,6 @@ public class MainScene : Scene {
 
         Jellyfish = new Sprite(256, 256, "Assets/Jellyfish.png", true, 16, 16);
         Jellyfish.Scale = 12;
-        
-        Jellyfish.Animator.Add(new AnimationData("Idle", [0, 1, 2], 6));
-        Jellyfish.Animator.Play("Idle");
         
         Add(Jellyfish);
     }

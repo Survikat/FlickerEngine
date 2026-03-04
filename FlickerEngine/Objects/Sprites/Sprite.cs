@@ -1,12 +1,10 @@
 ﻿using System.Numerics;
 using FlickerEngine.Managers.Assets;
-using FlickerEngine.Managers.Sprites;
 using FlickerEngine.Objects.Render;
 using Raylib_cs;
 
 namespace FlickerEngine.Objects.Sprites;
 
-// TO BE IMPLEMENTED.
 public class Sprite : Basic {
     private Texture2D Texture;
     
@@ -27,13 +25,13 @@ public class Sprite : Basic {
         get => _scale;
         set {
             _scale = value;
-            UpdateAnimator();
+            UpdateScale();
         }
     }
     
     // private float _rotation;
 
-    public Animator Animator = new ();
+    // public Animator Animator;
     private Rectangle Frame;
     
     public Sprite(float X, float Y, string Path, bool Animated = false, int FrameWidth = 0, int FrameHeight = 0) {
@@ -49,12 +47,12 @@ public class Sprite : Basic {
             Frame.Width = FrameWidth;
             Frame.Height = FrameHeight;
         }
-
-        UpdateAnimator();
+        
+        UpdateScale();
     }
 
     private Rectangle ScaledRect;
-    private void UpdateAnimator() {
+    private void UpdateScale() {
         ScaledRect = new Rectangle(
             Frame.X, 
             Frame.Y, 
@@ -64,8 +62,6 @@ public class Sprite : Basic {
         
         Texture.Width = (int)(GraphicWidth * Scale);
         Texture.Height = (int)(GraphicHeight * Scale);
-        
-        Animator.TextureSize = new Vector2(Texture.Width, Texture.Height);
     }
 
     public override void Draw(Camera Camera) {
@@ -83,8 +79,8 @@ public class Sprite : Basic {
             ScaledRect.Width,
             ScaledRect.Height
         );
-        
-        ScaledRect = Animator.Update(Rect.Value, Delta);
+
+        ScaledRect = Rect.Value;
         Rect = null;
     }
 
@@ -92,6 +88,5 @@ public class Sprite : Basic {
         base.Dispose();
         
         Raylib.UnloadTexture(Texture); // Remove Later
-        Animator.Dispose();
     }
 }
